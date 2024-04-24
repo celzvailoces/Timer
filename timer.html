@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.0.0/dist/css/bootstrap.min.css">
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <title>Timer</title>
 <style>
     body {
@@ -18,11 +22,19 @@
     
     /* Your existing CSS styles */
     
-    #timer-text {
-        font-size: 3vw; /* Adjusted font size using viewport width */
-        color: white; /* Set text color to white */
-        margin-bottom: 1vh; /* Adjusted margin below the timer text */
+#text {
+    font-size: 3vw; /* Adjusted font size using viewport width */
+    color: white; /* Set text color to white */
+    margin-bottom: 1vh; /* Adjusted margin below the timer text */
+}
+
+/* Media query for small devices */
+@media only screen and (max-width: 600px) {
+    #text {
+        font-size: 9vw; /* Adjusted font size for smaller devices */
     }
+}
+
     
     #timer {
         font-size: 25vw; /* Adjusted font size using viewport width */
@@ -52,6 +64,12 @@
       /*  padding: 1vh; */ /* Adjusted padding using viewport height */
         color: white; /* Set text color to white */
 }
+    #smalldevice {
+        background-color: transparent; /* Set background color to transparent */
+        border: none; /* Remove border */
+      /*  padding: 1vh; */ /* Adjusted padding using viewport height */
+        color: white; /* Set text color to white */
+}
 
 
     #timer-input {
@@ -76,7 +94,7 @@
         color: white;
         padding: 1vh 2vw; /* Adjusted padding using viewport units */
     }
-	#resetButton {
+    #resetButton {
         background-color: #FBB917;
         color: white;
         padding: 1vh 1vw; /* Adjusted padding using viewport units */
@@ -88,7 +106,7 @@
     #stopButton:hover {
         background-color: #FD1C03; /* Blue hover color for both buttons */
     }
-	#resetButton:hover {
+    #resetButton:hover {
         background-color: #FFA600; /* Blue hover color for both buttons */
     }
 
@@ -99,24 +117,37 @@
     /* Modal styles */
     
 .modal-content {
-    background-color: #C3FDB8;
+    background-color: #17b54a;
     position: fixed; /* Position fixed to keep it centered */
-    top: 14%; /* Align to the vertical center */
+    top: 25%; /* Align to the vertical center */
     left: 50%; /* Align to the horizontal center */
     transform: translate(-50%, -50%); /* Center the modal */
     border: 3px solid #b2f308;
-    width: 40vw; /* Adjusted width using viewport width */
+  /*  width: 40vw; /* Default width for big screens */ */
     text-align: center; /* Center the content horizontally */
+    opacity: 95%;
+}
+/* modal for small devices */
+@media screen and (max-width: 768px) {
+    .modal-content {
+        width: 80vw; /* Adjusted width for small screens */
+    }
 }
 
-#timer-input, #saveButton {
+
+#timer-input{
     margin: 2vh; /* Adjusted margin using viewport height */
     padding: 3vh 4vw; /* Adjusted padding using viewport units */
-    font-size: 2vw; /* Adjusted font size using viewport width */
+    font-size: 3vw; /* Adjusted font size using viewport width */
+}
+#saveButton {
+    margin: 2vh; /* Adjusted margin using viewport height */
+    padding: 3vh 4vw; /* Adjusted padding using viewport units */
+    font-size: 3.5vw; /* Adjusted font size using viewport width */
 }
 
 footer {
-	opacity: 70%;
+    opacity: 70%;
     position: fixed;
     bottom: 0;
     left: 0;
@@ -130,7 +161,7 @@ footer {
     /* Media queries for small screens */
     @media screen and (max-width: 600px) {
         #timer {
-            font-size: 15vw; /* Adjusted font size using viewport width */
+            font-size: vw; /* Adjusted font size using viewport width */
         }
 
         #timer-controls {
@@ -149,6 +180,18 @@ footer {
         #settingsButton {
             font-size: 10vw; /* Adjusted font size using viewport width */
             padding: 1vh 2vw; /* Adjusted padding using viewport units */
+        }
+
+        /* Add this media query to hide the line on small devices */
+        #settings span {
+            display: none;
+        }
+    }
+
+    /* Add this media query to hide the button on larger devices */
+    @media only screen and (min-width: 601px) {
+        #smalldevice {
+            display: none;
         }
     }
     
@@ -171,14 +214,18 @@ footer {
             background-position: 0% 50%;
         }
     }
-
 </style>
+
+
 </head>
 <body>
 <div id="settings" style="display: flex; align-items: center;">
     <button id="settingsButton">&#9881;</button>
-    <span style="color: white; margin-left: 0px;">Press 'S, s' on key Keyboard to open Settings</span>
+	<button id="smalldevice" style="font-size: 35px;">&#9974;</button>
+
+    <span style="color: white; margin-left: 10px;">Press 'S, s' on key Keyboard to open Settings</span>
 </div>
+
 
 
 <!-- The Modal -->
@@ -186,26 +233,50 @@ footer {
     <!-- Modal content -->
     <div class="modal-content">
        <!-- <span class="close">&times;</span> -->
-        <input type="number" id="timer-input" min="1" max="999" value="3" style="font-size: 2vw; text-align: center;">
+        <input type="number" id="timer-input" min="1" max="999" value="0" style="font-size: 4vw; text-align: center;">
 
 
         <button id="saveButton">Save</button><br>
-		 <span style="color: #f30808;">[ <span style="color: #000000;"> Press Alt + 1 or Alt + 2 to Full Screen and Exit Fullscreen </span>]</span>
+      <span style="color: #f30808;"><b>[ </b><span style="color: #000000;"> <b>Press Alt + 1 or Alt + 2 to Full Screen and Exit Fullscreen</b> </span><b>]</b></span>
     </div>
 </div>
-<div id="timer-text">COUNT DOWN TIMER</div> <!-- Added "Timer" text here -->
+<div id="text">COUNT DOWN TIMER</div> <!-- Added "Timer" text here -->
 <div id="timer">00:00</div>
 <div id="timer-controls">
     <button id="startButton">Start</button>
     <button id="stopButton">Stop</button>
-	<button id="resetButton">Reset</button>
+    <button id="resetButton">Reset</button>
 </div>
 
 <audio id="alarmSound" src="alarm.mp3" preload="auto"></audio>
 
 <footer class="footer">
-    © Copy Right 2024 Alright Reserved <span style="color: #00ff0d;">[ <span style="color: #00d4ff;"> Celz Vailoces </span>]</span>
+    &#169; Copy Right 2024 Alright Reserved <span style="color: #00ff0d;">[ <span style="color: #00d4ff;"> Celz Vailoces &#174;&#8482;</span>]</span>
 </footer>
+<style>
+.footer {
+    text-align: center;
+}
+
+.author {
+    display: inline-block;
+}
+
+@media only screen and (max-width: 600px) and (pointer: coarse) {
+    .footer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .author {
+        order: 2;
+        margin-top: 10px;
+    }
+}
+
+</style>
+
 <script>
     var timeLeft = 0; // Start with zero minutes and zero seconds
     var timerElement = document.getElementById('timer');
@@ -220,20 +291,19 @@ footer {
     var alarmSound = document.getElementById('alarmSound');
 
     // Add event listener for key press
-    // Add event listener for key press
-document.addEventListener('keydown', function(event) {
-    if (event.altKey && event.key === '1') {
-        // Toggle fullscreen when Alt+1 is pressed
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen();
+    document.addEventListener('keydown', function(event) {
+        if (event.altKey && event.key === '1') {
+            // Toggle fullscreen when Alt+1 is pressed
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            }
+        } else if (event.altKey && event.key === '2') {
+            // Exit fullscreen when Alt+2 is pressed
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            }
         }
-    } else if (event.altKey && event.key === '2') {
-        // Exit fullscreen when Alt+2 is pressed
-        if (document.fullscreenElement) {
-            document.exitFullscreen();
-        }
-    }
-});
+    });
 
 
     settingsButton.addEventListener('click', function() {
@@ -319,6 +389,16 @@ document.addEventListener('keydown', function(event) {
         alarmSound.pause();
         alarmSound.currentTime = 0;
     }
+
+    // Function to toggle fullscreen on small devices
+    var smallDeviceButton = document.getElementById('smalldevice');
+    smallDeviceButton.addEventListener('click', function() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+        } else {
+            document.exitFullscreen();
+        }
+    });
 </script>
 
 
