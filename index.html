@@ -667,11 +667,10 @@ footer {
                     background-size: 400% 400%;
                     animation: gradient 15s ease infinite;
                     height: 100vh;
+                    width: 100vw;
                     overflow: hidden;
                     font-family: 'Segoe UI', Arial, sans-serif;
-                    display: flex;
-                    flex-direction: column;
-                    padding: 8px 12px;
+                    position: relative;
                     user-select: none;
                 }
                 @keyframes gradient {
@@ -680,11 +679,14 @@ footer {
                     100% { background-position: 0% 50%; }
                 }
                 .pip-header {
+                    position: absolute;
+                    top: 8px;
+                    left: 12px;
+                    right: 12px;
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-                    width: 100%;
-                    flex-shrink: 0;
+                    z-index: 25;
                 }
                 .pip-title {
                     font-size: 11px;
@@ -707,16 +709,15 @@ footer {
                     border-color: white;
                 }
                 #pip-main-view {
-                    flex: 1;
+                    position: absolute;
+                    inset: 0;
                     display: flex;
-                    flex-direction: column;
-                    justify-content: center;
                     align-items: center;
+                    justify-content: center;
                     width: 100%;
-                    min-height: 0;
+                    height: 100%;
                 }
                 #pip-timer {
-                    flex: 1;
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -726,8 +727,8 @@ footer {
                     text-align: center;
                     line-height: 1;
                     width: 100%;
-                    margin: 0;
                     letter-spacing: 1px;
+                    transform: translateY(-4px);
                 }
                 .timer-size-seconds {
                     font-size: clamp(80px, 34vw, 150px) !important;
@@ -739,20 +740,23 @@ footer {
                     font-size: clamp(48px, 19vw, 82px) !important;
                 }
                 .pip-controls {
+                    position: absolute;
+                    bottom: 10px;
+                    left: 0;
+                    right: 0;
                     display: flex;
                     justify-content: center;
-                    gap: 10px;
-                    margin-bottom: 2px;
-                    flex-shrink: 0;
+                    z-index: 10;
                 }
                 .pip-btn {
                     border: none;
-                    border-radius: 5px;
+                    border-radius: 6px;
                     color: white;
                     font-weight: bold;
-                    font-size: 13px;
-                    padding: 6px 16px;
+                    font-size: 14px;
+                    padding: 8px 32px;
                     cursor: pointer;
+                    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
                     transition: transform 0.1s, opacity 0.2s;
                 }
                 .pip-btn:active {
@@ -762,18 +766,20 @@ footer {
                 .btn-start:hover { background-color: #22CE83; }
                 .btn-stop { background-color: #F75D59; }
                 .btn-stop:hover { background-color: #FD1C03; }
-                .btn-reset { background-color: #FBB917; }
-                .btn-reset:hover { background-color: #FFA600; }
 
                 /* Settings View in PiP */
                 #pip-settings-view {
+                    position: absolute;
+                    inset: 0;
                     display: none;
                     flex-direction: column;
                     align-items: center;
                     justify-content: center;
-                    flex: 1;
                     gap: 10px;
-                    width: 100%;
+                    z-index: 20;
+                    background: linear-gradient(-45deg, #7DDA58, #16898A, #50CA45, #CECECE);
+                    background-size: 400% 400%;
+                    animation: gradient 15s ease infinite;
                 }
                 .pip-inputs-row {
                     display: flex;
@@ -822,9 +828,10 @@ footer {
 
                 <div id="pip-main-view">
                     <div id="pip-timer" class="${getTimerSizeClass()}">${timerElement.textContent}</div>
-                    <div class="pip-controls">
-                        <button id="pip-start" class="pip-btn btn-start" style="padding: 8px 32px; font-size: 15px;">${(timeLeft === 0 && initialTime > 0) ? 'Start Again' : 'Start'}</button>
-                    </div>
+                </div>
+
+                <div id="pip-controls" class="pip-controls">
+                    <button id="pip-start" class="pip-btn btn-start" style="padding: 8px 32px; font-size: 15px;">${(timeLeft === 0 && initialTime > 0) ? 'Start Again' : 'Start'}</button>
                 </div>
 
                 <div id="pip-settings-view">
@@ -853,6 +860,7 @@ footer {
 
             var pipDoc = pipWindow.document;
             var pipMainView = pipDoc.getElementById('pip-main-view');
+            var pipControls = pipDoc.getElementById('pip-controls');
             var pipSettingsView = pipDoc.getElementById('pip-settings-view');
             var pipToggleBtn = pipDoc.getElementById('pip-toggle-settings');
 
@@ -863,6 +871,7 @@ footer {
                 pipDoc.getElementById('pip-m').value = document.getElementById('timer-minutes').value || 0;
                 pipDoc.getElementById('pip-s').value = document.getElementById('timer-seconds').value || 0;
                 pipMainView.style.display = 'none';
+                pipControls.style.display = 'none';
                 pipSettingsView.style.display = 'flex';
                 pipToggleBtn.textContent = '✕ Close';
             }
@@ -870,6 +879,7 @@ footer {
             function hideSettings() {
                 pipSettingsView.style.display = 'none';
                 pipMainView.style.display = 'flex';
+                pipControls.style.display = 'flex';
                 pipToggleBtn.innerHTML = '&#9881; Set Time';
             }
 
@@ -1018,11 +1028,10 @@ footer {
                     background-size: 400% 400%;
                     animation: gradient 15s ease infinite;
                     height: 100vh;
+                    width: 100vw;
                     overflow: hidden;
                     font-family: 'Segoe UI', Arial, sans-serif;
-                    display: flex;
-                    flex-direction: column;
-                    padding: 8px 12px;
+                    position: relative;
                     user-select: none;
                 }
                 @keyframes gradient {
@@ -1031,11 +1040,14 @@ footer {
                     100% { background-position: 0% 50%; }
                 }
                 .pip-header {
+                    position: absolute;
+                    top: 8px;
+                    left: 12px;
+                    right: 12px;
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-                    width: 100%;
-                    flex-shrink: 0;
+                    z-index: 25;
                 }
                 .pip-title {
                     font-size: 11px;
@@ -1053,16 +1065,15 @@ footer {
                     cursor: pointer;
                 }
                 #pop-main {
-                    flex: 1;
+                    position: absolute;
+                    inset: 0;
                     display: flex;
-                    flex-direction: column;
-                    justify-content: center;
                     align-items: center;
+                    justify-content: center;
                     width: 100%;
-                    min-height: 0;
+                    height: 100%;
                 }
                 #t {
-                    flex: 1;
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -1072,8 +1083,8 @@ footer {
                     text-align: center;
                     line-height: 1;
                     width: 100%;
-                    margin: 0;
                     letter-spacing: 1px;
+                    transform: translateY(-4px);
                 }
                 .timer-size-seconds {
                     font-size: clamp(80px, 34vw, 150px) !important;
@@ -1085,31 +1096,38 @@ footer {
                     font-size: clamp(48px, 19vw, 82px) !important;
                 }
                 .pip-controls {
+                    position: absolute;
+                    bottom: 10px;
+                    left: 0;
+                    right: 0;
                     display: flex;
                     justify-content: center;
-                    gap: 10px;
-                    margin-bottom: 2px;
-                    flex-shrink: 0;
+                    z-index: 10;
                 }
                 .pip-btn {
                     border: none;
-                    border-radius: 5px;
+                    border-radius: 6px;
                     color: white;
                     font-weight: bold;
-                    font-size: 13px;
-                    padding: 6px 16px;
+                    font-size: 14px;
+                    padding: 8px 32px;
                     cursor: pointer;
+                    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
                 }
                 .btn-start { background-color: #00827F; }
                 .btn-stop { background-color: #F75D59; }
-                .btn-reset { background-color: #FBB917; }
                 #pop-settings {
+                    position: absolute;
+                    inset: 0;
                     display: none;
                     flex-direction: column;
                     align-items: center;
-                    gap: 10px;
-                    flex: 1;
                     justify-content: center;
+                    gap: 10px;
+                    z-index: 20;
+                    background: linear-gradient(-45deg, #7DDA58, #16898A, #50CA45, #CECECE);
+                    background-size: 400% 400%;
+                    animation: gradient 15s ease infinite;
                 }
                 .pop-row {
                     display: flex;
@@ -1145,9 +1163,9 @@ footer {
             </div>
             <div id="pop-main">
                 <div id="t" class="${getTimerSizeClass()}">${timerElement.textContent}</div>
-                <div class="pip-controls">
-                    <button id="p-start" class="pip-btn btn-start" style="padding: 8px 32px; font-size: 15px;">${(timeLeft === 0 && initialTime > 0) ? 'Start Again' : 'Start'}</button>
-                </div>
+            </div>
+            <div id="pop-controls" class="pip-controls">
+                <button id="p-start" class="pip-btn btn-start" style="padding: 8px 32px; font-size: 15px;">${(timeLeft === 0 && initialTime > 0) ? 'Start Again' : 'Start'}</button>
             </div>
             <div id="pop-settings">
                 <div class="pop-row">
@@ -1168,6 +1186,7 @@ footer {
         popupWindow = popup;
 
         var pDoc = popup.document;
+        var pControls = pDoc.getElementById('pop-controls');
         pDoc.getElementById('p-start').onclick = startTimer;
 
         pDoc.getElementById('pop-toggle').onclick = function() {
@@ -1176,12 +1195,14 @@ footer {
             if (s.style.display === 'flex') {
                 s.style.display = 'none';
                 m.style.display = 'flex';
+                pControls.style.display = 'flex';
                 this.innerHTML = '&#9881; Set Time';
             } else {
                 pDoc.getElementById('ph').value = document.getElementById('timer-hours').value || 0;
                 pDoc.getElementById('pm').value = document.getElementById('timer-minutes').value || 0;
                 pDoc.getElementById('ps').value = document.getElementById('timer-seconds').value || 0;
                 m.style.display = 'none';
+                pControls.style.display = 'none';
                 s.style.display = 'flex';
                 this.textContent = '✕ Close';
             }
@@ -1190,6 +1211,7 @@ footer {
         pDoc.getElementById('p-cancel').onclick = function() {
             pDoc.getElementById('pop-settings').style.display = 'none';
             pDoc.getElementById('pop-main').style.display = 'flex';
+            pControls.style.display = 'flex';
             pDoc.getElementById('pop-toggle').innerHTML = '&#9881; Set Time';
         };
 
@@ -1200,6 +1222,7 @@ footer {
             if (setTimerValue(h, m, s)) {
                 pDoc.getElementById('pop-settings').style.display = 'none';
                 pDoc.getElementById('pop-main').style.display = 'flex';
+                pControls.style.display = 'flex';
                 pDoc.getElementById('pop-toggle').innerHTML = '&#9881; Set Time';
             }
         };
