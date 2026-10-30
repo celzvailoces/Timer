@@ -361,7 +361,7 @@ footer {
 <audio id="alarmSound" src="alarm.mp3" preload="auto"></audio>
 
 <footer class="footer">
-    &#169; Copy Right 2024 Alright Reserved <span style="color: #00ff0d;">[ <span style="color: #00d4ff;"> Celz Vailoces &#174;&#8482;</span>]</span>
+    &copy; Copyright 2018 All Rights Reserved <span style="color: #00ff0d;">[ <span style="color: #00d4ff;">Celz Vailoces &reg;&trade;</span> ]</span>
 </footer>
 <style>
 .footer {
@@ -389,6 +389,7 @@ footer {
 
 <script>
     var timeLeft = 0;
+    var initialTime = 0; // Remembers configured duration so teachers can easily restart
     var timerElement = document.getElementById('timer');
     var startButton = document.getElementById('startButton');
     var stopButton = document.getElementById('stopButton');
@@ -486,6 +487,12 @@ footer {
     }
 
     function startTimer() {
+        // If timer reached zero, restart automatically with the configured time
+        if (timeLeft === 0 && initialTime > 0) {
+            timeLeft = initialTime;
+            renderDisplay();
+            stopAlarm();
+        }
         if (timeLeft > 0 && !timerInterval) {
             renderDisplay();
             timerInterval = setInterval(tickTimer, 1000);
@@ -501,7 +508,7 @@ footer {
 
     function resetTimer() {
         stopTimer();
-        timeLeft = 0;
+        timeLeft = initialTime > 0 ? initialTime : 0;
         renderDisplay();
         stopAlarm();
     }
@@ -520,6 +527,7 @@ footer {
                 displayMode = 'seconds';
             }
             stopTimer();
+            initialTime = totalSeconds;
             timeLeft = totalSeconds;
             renderDisplay();
             stopAlarm();
@@ -676,14 +684,15 @@ footer {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    font-size: clamp(48px, 18vw, 76px);
-                    font-weight: bold;
+                    font-size: clamp(56px, 22vw, 92px);
+                    font-weight: 800;
                     color: white;
-                    text-shadow: 0 0 14px rgba(0,0,0,0.4);
+                    text-shadow: 0 0 16px rgba(0,0,0,0.45);
                     text-align: center;
                     line-height: 1;
                     width: 100%;
                     margin: 0;
+                    letter-spacing: 1px;
                 }
                 .pip-controls {
                     display: flex;
@@ -1006,14 +1015,15 @@ footer {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    font-size: clamp(48px, 18vw, 76px);
-                    font-weight: bold;
+                    font-size: clamp(56px, 22vw, 92px);
+                    font-weight: 800;
                     color: white;
-                    text-shadow: 0 0 14px rgba(0,0,0,0.4);
+                    text-shadow: 0 0 16px rgba(0,0,0,0.45);
                     text-align: center;
                     line-height: 1;
                     width: 100%;
                     margin: 0;
+                    letter-spacing: 1px;
                 }
                 .pip-controls {
                     display: flex;
