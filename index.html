@@ -459,12 +459,29 @@ footer {
         return '00';
     }
 
+    function getTimerSizeClass() {
+        if (displayMode === 'seconds') return 'timer-size-seconds';
+        if (displayMode === 'minutes') return 'timer-size-minutes';
+        return 'timer-size-hours';
+    }
+
     function renderDisplay() {
         var formatted = (timeLeft === 0 && !timerInterval) ? getResetDisplay() : formatTime(timeLeft);
         timerElement.textContent = formatted;
+        var sizeClass = getTimerSizeClass();
         if (pipWindow && !pipWindow.closed) {
             var el = pipWindow.document.getElementById('pip-timer');
-            if (el) el.textContent = formatted;
+            if (el) {
+                el.textContent = formatted;
+                if (!el.classList.contains(sizeClass)) el.className = sizeClass;
+            }
+        }
+        if (popupWindow && !popupWindow.closed) {
+            var pEl = popupWindow.document.getElementById('t');
+            if (pEl) {
+                pEl.textContent = formatted;
+                if (!pEl.classList.contains(sizeClass)) pEl.className = sizeClass;
+            }
         }
     }
 
@@ -703,7 +720,6 @@ footer {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    font-size: clamp(56px, 22vw, 92px);
                     font-weight: 800;
                     color: white;
                     text-shadow: 0 0 16px rgba(0,0,0,0.45);
@@ -712,6 +728,15 @@ footer {
                     width: 100%;
                     margin: 0;
                     letter-spacing: 1px;
+                }
+                .timer-size-seconds {
+                    font-size: clamp(80px, 34vw, 150px) !important;
+                }
+                .timer-size-minutes {
+                    font-size: clamp(64px, 26vw, 115px) !important;
+                }
+                .timer-size-hours {
+                    font-size: clamp(48px, 19vw, 82px) !important;
                 }
                 .pip-controls {
                     display: flex;
@@ -796,7 +821,7 @@ footer {
                 </div>
 
                 <div id="pip-main-view">
-                    <div id="pip-timer">${timerElement.textContent}</div>
+                    <div id="pip-timer" class="${getTimerSizeClass()}">${timerElement.textContent}</div>
                     <div class="pip-controls">
                         <button id="pip-start" class="pip-btn btn-start" style="padding: 8px 32px; font-size: 15px;">${(timeLeft === 0 && initialTime > 0) ? 'Start Again' : 'Start'}</button>
                     </div>
@@ -871,7 +896,13 @@ footer {
             pipRenderInterval = setInterval(function() {
                 if (pipWindow && !pipWindow.closed) {
                     var el = pipDoc.getElementById('pip-timer');
-                    if (el) el.textContent = timerElement.textContent;
+                    if (el) {
+                        el.textContent = timerElement.textContent;
+                        var sc = getTimerSizeClass();
+                        if (!el.classList.contains(sc)) {
+                            el.className = sc;
+                        }
+                    }
                     var btn = pipDoc.getElementById('pip-start');
                     if (btn) {
                         var targetLabel = (timeLeft === 0 && initialTime > 0) ? 'Start Again' : 'Start';
@@ -1035,7 +1066,6 @@ footer {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    font-size: clamp(56px, 22vw, 92px);
                     font-weight: 800;
                     color: white;
                     text-shadow: 0 0 16px rgba(0,0,0,0.45);
@@ -1044,6 +1074,15 @@ footer {
                     width: 100%;
                     margin: 0;
                     letter-spacing: 1px;
+                }
+                .timer-size-seconds {
+                    font-size: clamp(80px, 34vw, 150px) !important;
+                }
+                .timer-size-minutes {
+                    font-size: clamp(64px, 26vw, 115px) !important;
+                }
+                .timer-size-hours {
+                    font-size: clamp(48px, 19vw, 82px) !important;
                 }
                 .pip-controls {
                     display: flex;
@@ -1105,7 +1144,7 @@ footer {
                 <button id="pop-toggle" class="pip-settings-btn">&#9881; Set Time</button>
             </div>
             <div id="pop-main">
-                <div id="t">${timerElement.textContent}</div>
+                <div id="t" class="${getTimerSizeClass()}">${timerElement.textContent}</div>
                 <div class="pip-controls">
                     <button id="p-start" class="pip-btn btn-start" style="padding: 8px 32px; font-size: 15px;">${(timeLeft === 0 && initialTime > 0) ? 'Start Again' : 'Start'}</button>
                 </div>
@@ -1172,7 +1211,14 @@ footer {
                 return;
             }
             try {
-                popup.document.getElementById('t').textContent = timerElement.textContent;
+                var pEl = popup.document.getElementById('t');
+                if (pEl) {
+                    pEl.textContent = timerElement.textContent;
+                    var sc = getTimerSizeClass();
+                    if (!pEl.classList.contains(sc)) {
+                        pEl.className = sc;
+                    }
+                }
                 var pbtn = popup.document.getElementById('p-start');
                 if (pbtn) {
                     var targetLabel = (timeLeft === 0 && initialTime > 0) ? 'Start Again' : 'Start';
