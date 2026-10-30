@@ -3,6 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#17b54a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Timer">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="description" content="Countdown timer with overlay support for quizzes and competitions">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.0.0/dist/css/bootstrap.min.css">
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -37,7 +45,7 @@
 
     
     #timer {
-        font-size: 25vw; /* Adjusted font size using viewport width */
+        font-size: 13vw; /* Compact size for HH:MM:SS */
         text-align: center;
         margin-bottom: 5vh; /* Adjusted margin below the timer using viewport height */
         color: white; /* Set text color to white */
@@ -71,10 +79,24 @@
         color: white; /* Set text color to white */
 }
 
-
-    #timer-input {
-        margin-right: 1vw; /* Adjusted margin using viewport width */
+    #overlayButton {
+        background-color: rgba(255,255,255,0.15);
+        border: 2px solid rgba(255,255,255,0.4);
+        border-radius: 8px;
+        color: white;
+        padding: 0.5vh 1.2vw;
+        font-size: clamp(12px, 1.5vw, 18px);
+        cursor: pointer;
+        margin-left: 10px;
+        transition: background-color 0.3s, border-color 0.3s;
+        white-space: nowrap;
     }
+    #overlayButton:hover {
+        background-color: rgba(255,255,255,0.3);
+        border-color: rgba(255,255,255,0.7);
+    }
+
+
     
     button {
         margin: 0 1vw; /* Adjusted margin using viewport width */
@@ -115,35 +137,103 @@
     }
 
     /* Modal styles */
-    
+
 .modal-content {
     background-color: #17b54a;
-    position: fixed; /* Position fixed to keep it centered */
-    top: 25%; /* Align to the vertical center */
-    left: 50%; /* Align to the horizontal center */
-    transform: translate(-50%, -50%); /* Center the modal */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     border: 3px solid #b2f308;
-  /*  width: 40vw; /* Default width for big screens */ */
-    text-align: center; /* Center the content horizontally */
-    opacity: 95%;
-}
-/* modal for small devices */
-@media screen and (max-width: 768px) {
-    .modal-content {
-        width: 80vw; /* Adjusted width for small screens */
-    }
+    text-align: center;
+    opacity: 0.95;
+    padding: 3vh 3vw;
+    border-radius: 12px;
+    width: auto;
+    max-width: 90vw;
+    box-sizing: border-box;
+    z-index: 1050;
 }
 
-
-#timer-input{
-    margin: 2vh; /* Adjusted margin using viewport height */
-    padding: 3vh 4vw; /* Adjusted padding using viewport units */
-    font-size: 3vw; /* Adjusted font size using viewport width */
+.modal-inputs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1vw;
+    flex-wrap: nowrap;
 }
+
+.modal-inputs .input-group {
+    text-align: center;
+}
+
+.modal-inputs .input-group label {
+    color: white;
+    font-size: clamp(12px, 2vw, 20px);
+    display: block;
+    margin-bottom: 4px;
+}
+
+.modal-inputs .input-group input {
+    font-size: clamp(18px, 4vw, 40px);
+    text-align: center;
+    width: clamp(50px, 8vw, 80px);
+    padding: 6px 4px;
+    border: 2px solid #b2f308;
+    border-radius: 6px;
+}
+
+.modal-inputs .colon {
+    font-size: clamp(20px, 4vw, 40px);
+    color: white;
+    font-weight: bold;
+    padding-top: 20px; /* offset for the label above inputs */
+}
+
 #saveButton {
-    margin: 2vh; /* Adjusted margin using viewport height */
-    padding: 3vh 4vw; /* Adjusted padding using viewport units */
-    font-size: 3.5vw; /* Adjusted font size using viewport width */
+    margin: 2vh auto;
+    padding: clamp(8px, 2vh, 20px) clamp(16px, 4vw, 40px);
+    font-size: clamp(14px, 3vw, 28px);
+    display: inline-block;
+}
+
+.modal-hint {
+    font-size: clamp(10px, 1.5vw, 14px);
+    margin-top: 6px;
+}
+
+/* Modal responsive for small devices */
+@media screen and (max-width: 600px) {
+    .modal-content {
+        width: 92vw;
+        padding: 3vh 4vw;
+    }
+
+    .modal-inputs {
+        gap: 3vw;
+    }
+
+    .modal-inputs .input-group input {
+        width: clamp(50px, 18vw, 80px);
+        font-size: clamp(18px, 6vw, 32px);
+    }
+
+    .modal-inputs .input-group label {
+        font-size: clamp(11px, 3.5vw, 16px);
+    }
+
+    .modal-inputs .colon {
+        font-size: clamp(20px, 6vw, 32px);
+    }
+
+    #saveButton {
+        font-size: clamp(14px, 5vw, 22px);
+        padding: 2vh 8vw;
+    }
+
+    .modal-hint {
+        font-size: clamp(9px, 2.8vw, 13px);
+    }
 }
 
 footer {
@@ -186,6 +276,11 @@ footer {
         #settings span {
             display: none;
         }
+
+        #overlayButton {
+            font-size: clamp(11px, 3.5vw, 16px);
+            padding: 1vh 3vw;
+        }
     }
 
     /* Add this media query to hide the button on larger devices */
@@ -222,6 +317,7 @@ footer {
 <div id="settings" style="display: flex; align-items: center;">
     <button id="settingsButton">&#9881;</button>
 	<button id="smalldevice" style="font-size: 35px;">&#9974;</button>
+    <button id="overlayButton" title="Pop out timer as overlay">&#128248; Overlay</button>
 
     <span style="color: white; margin-left: 10px;">Press 'S, s' on key Keyboard to open Settings</span>
 </div>
@@ -233,15 +329,29 @@ footer {
     <!-- Modal content -->
     <div class="modal-content">
        <!-- <span class="close">&times;</span> -->
-        <input type="number" id="timer-input" min="1" max="999" value="0" style="font-size: 4vw; text-align: center;">
-
+        <div class="modal-inputs">
+            <div class="input-group">
+                <label>Hours</label>
+                <input type="number" id="timer-hours" min="0" max="99" value="0">
+            </div>
+            <span class="colon">:</span>
+            <div class="input-group">
+                <label>Minutes</label>
+                <input type="number" id="timer-minutes" min="0" max="59" value="0">
+            </div>
+            <span class="colon">:</span>
+            <div class="input-group">
+                <label>Seconds</label>
+                <input type="number" id="timer-seconds" min="0" max="59" value="0">
+            </div>
+        </div>
 
         <button id="saveButton">Save</button><br>
-      <span style="color: #f30808;"><b>[ </b><span style="color: #000000;"> <b>Press Alt + 1 or Alt + 2 to Full Screen and Exit Fullscreen</b> </span><b>]</b></span>
+      <span class="modal-hint" style="color: #f30808;"><b>[ </b><span style="color: #000000;"> <b>Press Alt + 1 or Alt + 2 to Full Screen and Exit Fullscreen</b> </span><b>]</b></span>
     </div>
 </div>
 <div id="text">COUNT DOWN TIMER</div> <!-- Added "Timer" text here -->
-<div id="timer">00:00</div>
+<div id="timer">00:00:00</div>
 <div id="timer-controls">
     <button id="startButton">Start</button>
     <button id="stopButton">Stop</button>
@@ -278,17 +388,18 @@ footer {
 </style>
 
 <script>
-    var timeLeft = 0; // Start with zero minutes and zero seconds
+    var timeLeft = 0;
     var timerElement = document.getElementById('timer');
     var startButton = document.getElementById('startButton');
     var stopButton = document.getElementById('stopButton');
-    var resetButton = document.getElementById('resetButton'); // Added reset button
+    var resetButton = document.getElementById('resetButton');
     var settingsButton = document.getElementById('settingsButton');
     var settingsModal = document.getElementById('settingsModal');
     var saveButton = document.getElementById('saveButton');
     var timerInterval;
     var modalVisible = false;
     var alarmSound = document.getElementById('alarmSound');
+    var displayMode = 'hours'; // 'seconds' = SS, 'minutes' = MM:SS, 'hours' = HH:MM:SS
 
     // Add event listener for key press
     document.addEventListener('keydown', function(event) {
@@ -323,52 +434,116 @@ footer {
         }
     });
 
-    function updateTimer() {
-        var minutes = Math.floor(timeLeft / 60);
-        var seconds = timeLeft % 60;
+    function formatTime(totalSeconds) {
+        var hours = Math.floor(totalSeconds / 3600);
+        var minutes = Math.floor((totalSeconds % 3600) / 60);
+        var seconds = totalSeconds % 60;
 
-        // Add leading zeros if necessary
+        var hoursStr = ('0' + hours).slice(-2);
         var minutesStr = ('0' + minutes).slice(-2);
         var secondsStr = ('0' + seconds).slice(-2);
 
-        timerElement.textContent = minutesStr + ':' + secondsStr;
-
-        if (timeLeft > 0) {
-            timeLeft--;
+        if (displayMode === 'hours') {
+            return hoursStr + ':' + minutesStr + ':' + secondsStr;
+        } else if (displayMode === 'minutes') {
+            return minutesStr + ':' + secondsStr;
         } else {
-            clearInterval(timerInterval);
-            playAlarm(); // Play the alarm when the timer reaches 00:00
+            return secondsStr;
         }
     }
 
-    startButton.addEventListener('click', function() {
-        if (timeLeft > 0) {
-            updateTimer(); // Start immediately if time is set
-            timerInterval = setInterval(updateTimer, 1000);
+    function getResetDisplay() {
+        if (displayMode === 'hours') return '00:00:00';
+        if (displayMode === 'minutes') return '00:00';
+        return '00';
+    }
+
+    function renderDisplay() {
+        var formatted = (timeLeft === 0 && !timerInterval) ? getResetDisplay() : formatTime(timeLeft);
+        timerElement.textContent = formatted;
+        if (pipWindow && !pipWindow.closed) {
+            var el = pipWindow.document.getElementById('pip-timer');
+            if (el) el.textContent = formatted;
         }
-    });
+    }
 
-    stopButton.addEventListener('click', function() {
-        clearInterval(timerInterval);
-    });
+    function updateTimer() {
+        renderDisplay();
+    }
 
-    resetButton.addEventListener('click', function() {
-        clearInterval(timerInterval);
-        timeLeft = 0; // Reset timeLeft to 0
-        timerElement.textContent = '00:00'; // Reset timer display
-        stopAlarm(); // Stop the alarm when the timer is reset
-    });
+    function tickTimer() {
+        if (timeLeft > 0) {
+            timeLeft--;
+            renderDisplay();
+            if (timeLeft === 0) {
+                stopTimer();
+                playAlarm();
+            }
+        } else {
+            stopTimer();
+            playAlarm();
+        }
+    }
+
+    function startTimer() {
+        if (timeLeft > 0 && !timerInterval) {
+            renderDisplay();
+            timerInterval = setInterval(tickTimer, 1000);
+        }
+    }
+
+    function stopTimer() {
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+    }
+
+    function resetTimer() {
+        stopTimer();
+        timeLeft = 0;
+        renderDisplay();
+        stopAlarm();
+    }
+
+    function setTimerValue(hours, minutes, seconds) {
+        var h = parseInt(hours) || 0;
+        var m = parseInt(minutes) || 0;
+        var s = parseInt(seconds) || 0;
+        var totalSeconds = (h * 3600) + (m * 60) + s;
+        if (totalSeconds >= 1) {
+            if (h > 0) {
+                displayMode = 'hours';
+            } else if (m > 0) {
+                displayMode = 'minutes';
+            } else {
+                displayMode = 'seconds';
+            }
+            stopTimer();
+            timeLeft = totalSeconds;
+            renderDisplay();
+            stopAlarm();
+            document.getElementById('timer-hours').value = h;
+            document.getElementById('timer-minutes').value = m;
+            document.getElementById('timer-seconds').value = s;
+            return true;
+        } else {
+            alert('Please enter a valid timer value (at least 1 second).');
+            return false;
+        }
+    }
+
+    startButton.addEventListener('click', startTimer);
+    stopButton.addEventListener('click', stopTimer);
+    resetButton.addEventListener('click', resetTimer);
 
     saveButton.addEventListener('click', function() {
-        var newTimerValue = parseInt(document.getElementById('timer-input').value);
-        if (newTimerValue >= 1 && newTimerValue <= 999) {
-            timeLeft = newTimerValue * 60;
-            updateTimer();
-            settingsModal.style.display = 'none'; // Hide settings modal after saving
+        var h = document.getElementById('timer-hours').value;
+        var m = document.getElementById('timer-minutes').value;
+        var s = document.getElementById('timer-seconds').value;
+        if (setTimerValue(h, m, s)) {
+            settingsModal.style.display = 'none';
             modalVisible = false;
-            stopAlarm(); // Stop the alarm when a new time is set
-        } else {
-            alert('Please enter a valid timer value between 1 and 999 minutes.');
         }
     });
 
@@ -379,15 +554,28 @@ footer {
         }
     });
 
-    // Function to play the alarm sound
+    // Shorter alarm: plays for 3 seconds then stops automatically
+    var alarmTimeout = null;
+
     function playAlarm() {
-        alarmSound.play();
+        try {
+            alarmSound.currentTime = 0;
+            alarmSound.play().catch(function(e) { console.log('Audio playback prevented:', e); });
+        } catch (e) {
+            console.log(e);
+        }
+        clearTimeout(alarmTimeout);
+        alarmTimeout = setTimeout(function() {
+            stopAlarm();
+        }, 3000); // Shorter alarm: stops automatically after 3 seconds
     }
 
-    // Function to stop the alarm sound
     function stopAlarm() {
-        alarmSound.pause();
-        alarmSound.currentTime = 0;
+        clearTimeout(alarmTimeout);
+        try {
+            alarmSound.pause();
+            alarmSound.currentTime = 0;
+        } catch (e) {}
     }
 
     // Function to toggle fullscreen on small devices
@@ -399,6 +587,537 @@ footer {
             document.exitFullscreen();
         }
     });
+
+    // ===== Picture-in-Picture Overlay =====
+    var overlayButton = document.getElementById('overlayButton');
+    var pipWindow = null;
+    var pipCanvas = null;
+    var pipVideo = null;
+    var pipRenderInterval = null;
+
+    overlayButton.addEventListener('click', function() {
+        // Try Document PiP first (Chrome 116+), then fall back to Video PiP
+        if ('documentPictureInPicture' in window) {
+            openDocumentPiP();
+        } else if (document.pictureInPictureEnabled) {
+            openVideoPiP();
+        } else {
+            // Fallback: open a small always-on-top-style popup window
+            openPopupOverlay();
+        }
+    });
+
+    // === Method 1: Document Picture-in-Picture (best quality with buttons & settings) ===
+    async function openDocumentPiP() {
+        try {
+            pipWindow = await documentPictureInPicture.requestWindow({
+                width: 420,
+                height: 220
+            });
+
+            var style = pipWindow.document.createElement('style');
+            style.textContent = `
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body {
+                    background: linear-gradient(-45deg, #7DDA58, #16898A, #50CA45, #CECECE);
+                    background-size: 400% 400%;
+                    animation: gradient 15s ease infinite;
+                    height: 100vh;
+                    overflow: hidden;
+                    font-family: 'Segoe UI', Arial, sans-serif;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    padding: 8px 12px;
+                    user-select: none;
+                }
+                @keyframes gradient {
+                    0% { background-position: 0% 50%; }
+                    50% { background-position: 100% 50%; }
+                    100% { background-position: 0% 50%; }
+                }
+                .pip-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    width: 100%;
+                }
+                .pip-title {
+                    font-size: 11px;
+                    font-weight: bold;
+                    letter-spacing: 1px;
+                    color: rgba(255,255,255,0.85);
+                }
+                .pip-settings-btn {
+                    background: rgba(255,255,255,0.2);
+                    border: 1px solid rgba(255,255,255,0.4);
+                    color: white;
+                    border-radius: 4px;
+                    padding: 3px 8px;
+                    font-size: 11px;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                }
+                .pip-settings-btn:hover {
+                    background: rgba(255,255,255,0.35);
+                    border-color: white;
+                }
+                #pip-timer {
+                    font-size: clamp(32px, 12vw, 54px);
+                    font-weight: bold;
+                    color: white;
+                    text-shadow: 0 0 10px rgba(0,0,0,0.3);
+                    text-align: center;
+                    line-height: 1.1;
+                    margin: 4px 0;
+                }
+                .pip-controls {
+                    display: flex;
+                    justify-content: center;
+                    gap: 8px;
+                    margin-bottom: 2px;
+                }
+                .pip-btn {
+                    border: none;
+                    border-radius: 5px;
+                    color: white;
+                    font-weight: bold;
+                    font-size: 13px;
+                    padding: 6px 16px;
+                    cursor: pointer;
+                    transition: transform 0.1s, opacity 0.2s;
+                }
+                .pip-btn:active {
+                    transform: scale(0.96);
+                }
+                .btn-start { background-color: #00827F; }
+                .btn-start:hover { background-color: #22CE83; }
+                .btn-stop { background-color: #F75D59; }
+                .btn-stop:hover { background-color: #FD1C03; }
+                .btn-reset { background-color: #FBB917; }
+                .btn-reset:hover { background-color: #FFA600; }
+
+                /* Settings View in PiP */
+                #pip-settings-view {
+                    display: none;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    flex: 1;
+                    gap: 6px;
+                }
+                .pip-inputs-row {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 6px;
+                }
+                .pip-input-col {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                }
+                .pip-input-col label {
+                    font-size: 10px;
+                    color: white;
+                    font-weight: bold;
+                    margin-bottom: 2px;
+                }
+                .pip-input-col input {
+                    width: 48px;
+                    height: 32px;
+                    text-align: center;
+                    font-size: 16px;
+                    font-weight: bold;
+                    border: 2px solid #b2f308;
+                    border-radius: 5px;
+                    background: white;
+                    color: #222;
+                }
+                .pip-colon {
+                    font-size: 20px;
+                    font-weight: bold;
+                    color: white;
+                    margin-top: 14px;
+                }
+            `;
+            pipWindow.document.head.appendChild(style);
+
+            pipWindow.document.body.innerHTML = `
+                <div class="pip-header">
+                    <span class="pip-title">COUNTDOWN TIMER</span>
+                    <button id="pip-toggle-settings" class="pip-settings-btn">&#9881; Set Time</button>
+                </div>
+
+                <div id="pip-main-view">
+                    <div id="pip-timer">${timerElement.textContent}</div>
+                    <div class="pip-controls">
+                        <button id="pip-start" class="pip-btn btn-start">Start</button>
+                        <button id="pip-stop" class="pip-btn btn-stop">Stop</button>
+                        <button id="pip-reset" class="pip-btn btn-reset">Reset</button>
+                    </div>
+                </div>
+
+                <div id="pip-settings-view">
+                    <div class="pip-inputs-row">
+                        <div class="pip-input-col">
+                            <label>Hours</label>
+                            <input type="number" id="pip-h" min="0" max="99" value="0">
+                        </div>
+                        <span class="pip-colon">:</span>
+                        <div class="pip-input-col">
+                            <label>Minutes</label>
+                            <input type="number" id="pip-m" min="0" max="59" value="0">
+                        </div>
+                        <span class="pip-colon">:</span>
+                        <div class="pip-input-col">
+                            <label>Seconds</label>
+                            <input type="number" id="pip-s" min="0" max="59" value="0">
+                        </div>
+                    </div>
+                    <div class="pip-controls" style="margin-top: 6px;">
+                        <button id="pip-save" class="pip-btn btn-start" style="padding: 4px 16px;">Save</button>
+                        <button id="pip-cancel" class="pip-btn btn-stop" style="padding: 4px 16px;">Cancel</button>
+                    </div>
+                </div>
+            `;
+
+            var pipDoc = pipWindow.document;
+            var pipMainView = pipDoc.getElementById('pip-main-view');
+            var pipSettingsView = pipDoc.getElementById('pip-settings-view');
+            var pipToggleBtn = pipDoc.getElementById('pip-toggle-settings');
+
+            pipDoc.getElementById('pip-start').addEventListener('click', startTimer);
+            pipDoc.getElementById('pip-stop').addEventListener('click', stopTimer);
+            pipDoc.getElementById('pip-reset').addEventListener('click', resetTimer);
+
+            function showSettings() {
+                pipDoc.getElementById('pip-h').value = document.getElementById('timer-hours').value || 0;
+                pipDoc.getElementById('pip-m').value = document.getElementById('timer-minutes').value || 0;
+                pipDoc.getElementById('pip-s').value = document.getElementById('timer-seconds').value || 0;
+                pipMainView.style.display = 'none';
+                pipSettingsView.style.display = 'flex';
+                pipToggleBtn.textContent = '✕ Close';
+            }
+
+            function hideSettings() {
+                pipSettingsView.style.display = 'none';
+                pipMainView.style.display = 'block';
+                pipToggleBtn.innerHTML = '&#9881; Set Time';
+            }
+
+            pipToggleBtn.addEventListener('click', function() {
+                if (pipSettingsView.style.display === 'flex') {
+                    hideSettings();
+                } else {
+                    showSettings();
+                }
+            });
+
+            pipDoc.getElementById('pip-cancel').addEventListener('click', hideSettings);
+
+            pipDoc.getElementById('pip-save').addEventListener('click', function() {
+                var h = pipDoc.getElementById('pip-h').value;
+                var m = pipDoc.getElementById('pip-m').value;
+                var s = pipDoc.getElementById('pip-s').value;
+                if (setTimerValue(h, m, s)) {
+                    hideSettings();
+                }
+            });
+
+            // Sync timer text to PiP window
+            pipRenderInterval = setInterval(function() {
+                if (pipWindow && !pipWindow.closed) {
+                    var el = pipDoc.getElementById('pip-timer');
+                    if (el) el.textContent = timerElement.textContent;
+                } else {
+                    clearInterval(pipRenderInterval);
+                }
+            }, 200);
+
+            pipWindow.addEventListener('pagehide', function() {
+                clearInterval(pipRenderInterval);
+                pipWindow = null;
+            });
+        } catch (e) {
+            console.error('Document PiP failed:', e);
+            // Fallback
+            if (document.pictureInPictureEnabled) {
+                openVideoPiP();
+            } else {
+                openPopupOverlay();
+            }
+        }
+    }
+
+    // === Method 2: Video Picture-in-Picture (canvas-based fallback) ===
+    function openVideoPiP() {
+        if (pipCanvas) {
+            // Already running, close it
+            if (pipVideo && document.pictureInPictureElement) {
+                document.exitPictureInPicture();
+            }
+            cleanupVideoPiP();
+            return;
+        }
+
+        pipCanvas = document.createElement('canvas');
+        pipCanvas.width = 480;
+        pipCanvas.height = 180;
+        var ctx = pipCanvas.getContext('2d');
+
+        function renderFrame() {
+            // Background
+            ctx.fillStyle = '#16898A';
+            ctx.fillRect(0, 0, 480, 180);
+
+            // Timer text
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = 'bold 72px "Segoe UI", Arial, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(timerElement.textContent, 240, 100);
+
+            // Label
+            ctx.font = '16px Arial, sans-serif';
+            ctx.fillStyle = 'rgba(255,255,255,0.7)';
+            ctx.fillText('COUNTDOWN TIMER', 240, 30);
+        }
+
+        renderFrame();
+        pipRenderInterval = setInterval(renderFrame, 200);
+
+        pipVideo = document.createElement('video');
+        pipVideo.srcObject = pipCanvas.captureStream(5);
+        pipVideo.muted = true;
+        pipVideo.style.display = 'none';
+        document.body.appendChild(pipVideo);
+
+        pipVideo.play().then(function() {
+            return pipVideo.requestPictureInPicture();
+        }).catch(function(e) {
+            console.error('Video PiP failed:', e);
+            cleanupVideoPiP();
+            openPopupOverlay();
+        });
+
+        pipVideo.addEventListener('leavepictureinpicture', function() {
+            cleanupVideoPiP();
+        });
+    }
+
+    function cleanupVideoPiP() {
+        clearInterval(pipRenderInterval);
+        if (pipVideo) {
+            pipVideo.remove();
+            pipVideo = null;
+        }
+        pipCanvas = null;
+    }
+
+    // === Method 3: Popup window fallback (with buttons and settings) ===
+    function openPopupOverlay() {
+        var w = 420;
+        var h = 220;
+        var left = screen.width - w - 20;
+        var top = 20;
+        var popup = window.open('', 'TimerOverlay',
+            'width=' + w + ',height=' + h + ',left=' + left + ',top=' + top +
+            ',toolbar=no,menubar=no,scrollbars=no,resizable=yes');
+
+        if (!popup) {
+            alert('Please allow pop-ups for this site to use the overlay feature.');
+            return;
+        }
+
+        popup.document.write(`
+            <!DOCTYPE html>
+            <html><head><title>Timer Overlay</title>
+            <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body {
+                    background: linear-gradient(-45deg, #7DDA58, #16898A, #50CA45, #CECECE);
+                    background-size: 400% 400%;
+                    animation: gradient 15s ease infinite;
+                    height: 100vh;
+                    overflow: hidden;
+                    font-family: 'Segoe UI', Arial, sans-serif;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    padding: 8px 12px;
+                    user-select: none;
+                }
+                @keyframes gradient {
+                    0% { background-position: 0% 50%; }
+                    50% { background-position: 100% 50%; }
+                    100% { background-position: 0% 50%; }
+                }
+                .pip-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    width: 100%;
+                }
+                .pip-title {
+                    font-size: 11px;
+                    font-weight: bold;
+                    letter-spacing: 1px;
+                    color: rgba(255,255,255,0.85);
+                }
+                .pip-settings-btn {
+                    background: rgba(255,255,255,0.2);
+                    border: 1px solid rgba(255,255,255,0.4);
+                    color: white;
+                    border-radius: 4px;
+                    padding: 3px 8px;
+                    font-size: 11px;
+                    cursor: pointer;
+                }
+                #t {
+                    font-size: 48px;
+                    font-weight: bold;
+                    color: white;
+                    text-shadow: 0 0 10px rgba(0,0,0,0.3);
+                    text-align: center;
+                    margin: 4px 0;
+                }
+                .pip-controls {
+                    display: flex;
+                    justify-content: center;
+                    gap: 8px;
+                }
+                .pip-btn {
+                    border: none;
+                    border-radius: 5px;
+                    color: white;
+                    font-weight: bold;
+                    font-size: 13px;
+                    padding: 6px 16px;
+                    cursor: pointer;
+                }
+                .btn-start { background-color: #00827F; }
+                .btn-stop { background-color: #F75D59; }
+                .btn-reset { background-color: #FBB917; }
+                #pop-settings {
+                    display: none;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 6px;
+                }
+                .pop-row {
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                }
+                .pop-col {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                }
+                .pop-col label {
+                    font-size: 10px;
+                    color: white;
+                    font-weight: bold;
+                }
+                .pop-col input {
+                    width: 48px;
+                    height: 30px;
+                    text-align: center;
+                    font-size: 16px;
+                    border: 2px solid #b2f308;
+                    border-radius: 4px;
+                }
+            </style></head><body>
+            <div class="pip-header">
+                <span class="pip-title">COUNTDOWN TIMER</span>
+                <button id="pop-toggle" class="pip-settings-btn">&#9881; Set Time</button>
+            </div>
+            <div id="pop-main">
+                <div id="t">${timerElement.textContent}</div>
+                <div class="pip-controls">
+                    <button id="p-start" class="pip-btn btn-start">Start</button>
+                    <button id="p-stop" class="pip-btn btn-stop">Stop</button>
+                    <button id="p-reset" class="pip-btn btn-reset">Reset</button>
+                </div>
+            </div>
+            <div id="pop-settings">
+                <div class="pop-row">
+                    <div class="pop-col"><label>Hours</label><input type="number" id="ph" min="0" max="99" value="0"></div>
+                    <span style="color:white;font-weight:bold;margin-top:10px;">:</span>
+                    <div class="pop-col"><label>Minutes</label><input type="number" id="pm" min="0" max="59" value="0"></div>
+                    <span style="color:white;font-weight:bold;margin-top:10px;">:</span>
+                    <div class="pop-col"><label>Seconds</label><input type="number" id="ps" min="0" max="59" value="0"></div>
+                </div>
+                <div class="pip-controls" style="margin-top:6px;">
+                    <button id="p-save" class="pip-btn btn-start" style="padding:4px 14px;">Save</button>
+                    <button id="p-cancel" class="pip-btn btn-stop" style="padding:4px 14px;">Cancel</button>
+                </div>
+            </div>
+            </body></html>
+        `);
+        popup.document.close();
+
+        var pDoc = popup.document;
+        pDoc.getElementById('p-start').onclick = startTimer;
+        pDoc.getElementById('p-stop').onclick = stopTimer;
+        pDoc.getElementById('p-reset').onclick = resetTimer;
+
+        pDoc.getElementById('pop-toggle').onclick = function() {
+            var s = pDoc.getElementById('pop-settings');
+            var m = pDoc.getElementById('pop-main');
+            if (s.style.display === 'flex') {
+                s.style.display = 'none';
+                m.style.display = 'block';
+                this.innerHTML = '&#9881; Set Time';
+            } else {
+                pDoc.getElementById('ph').value = document.getElementById('timer-hours').value || 0;
+                pDoc.getElementById('pm').value = document.getElementById('timer-minutes').value || 0;
+                pDoc.getElementById('ps').value = document.getElementById('timer-seconds').value || 0;
+                m.style.display = 'none';
+                s.style.display = 'flex';
+                this.textContent = '✕ Close';
+            }
+        };
+
+        pDoc.getElementById('p-cancel').onclick = function() {
+            pDoc.getElementById('pop-settings').style.display = 'none';
+            pDoc.getElementById('pop-main').style.display = 'block';
+            pDoc.getElementById('pop-toggle').innerHTML = '&#9881; Set Time';
+        };
+
+        pDoc.getElementById('p-save').onclick = function() {
+            var h = pDoc.getElementById('ph').value;
+            var m = pDoc.getElementById('pm').value;
+            var s = pDoc.getElementById('ps').value;
+            if (setTimerValue(h, m, s)) {
+                pDoc.getElementById('pop-settings').style.display = 'none';
+                pDoc.getElementById('pop-main').style.display = 'block';
+                pDoc.getElementById('pop-toggle').innerHTML = '&#9881; Set Time';
+            }
+        };
+
+        var popupInterval = setInterval(function() {
+            if (popup.closed) {
+                clearInterval(popupInterval);
+                return;
+            }
+            try {
+                popup.document.getElementById('t').textContent = timerElement.textContent;
+            } catch(e) {
+                clearInterval(popupInterval);
+            }
+        }, 200);
+    }
+
+    // ===== Register Service Worker for PWA =====
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js').then(function(reg) {
+            console.log('Service Worker registered:', reg.scope);
+        }).catch(function(err) {
+            console.log('Service Worker registration failed:', err);
+        });
+    }
 </script>
 
 
